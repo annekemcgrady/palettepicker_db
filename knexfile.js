@@ -5,25 +5,24 @@ module.exports = {
   development: {
     client: 'pg',
     connection: 'postgres://localhost/color_schemes',
+    useNullAsDefault: true,
     migrations: {
-      directory: './db/migrations/'
+      directory: './db/migrations'
     },
     seeds: {
       directory: './db/seeds/dev'
-    },
-    useNullAsDefault: true
+    }
   },
-
-  testing: {
+  test: {
     client: 'pg',
-    connection: 'postgress://localhost/color_schemes_test',
+    connection: 'postgres://localhost/color_schemes_test',
     migrations: {
-      directory: './db/migrations/'
+      directory: './db/migrations'
     },
     seeds: {
       directory: './db/seeds/test'
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   production: {
