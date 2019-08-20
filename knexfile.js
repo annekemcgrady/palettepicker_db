@@ -4,26 +4,25 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: {
-      filename: 'postgres://localhost/<name of database>',
-      useNullAsDefault: true
+    connection: 'postgres://localhost/color_schemes',
+    useNullAsDefault: true,
+    migrations: {
+      directory: './db/migrations'
+    },
+    seeds: {
+      directory: './db/seeds/dev'
     }
   },
-
-  staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/color_schemes_test',
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      directory: './db/migrations'
+    },
+    seeds: {
+      directory: './db/seeds/test'
+    },
+    useNullAsDefault: true,
   },
 
   production: {
