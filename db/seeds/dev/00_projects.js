@@ -31,7 +31,7 @@ const createProject = (knex, project) => {
 
 exports.seed = (knex) => {
   return knex('palettes').del()
-  .then(() => knex('books').del())
+  .then(() => knex('projects').del())
   .then(() => {
     let projectPromises = [];
 
