@@ -2,7 +2,9 @@ const app = require('./app.js')
 
 app.set('port', process.env.PORT || 3000);
 
-app.get('/')
+app.get('/', (request, response) => {
+  response.status(200).json('Initial SetUp Complete')
+})
 
 
 
