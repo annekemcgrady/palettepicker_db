@@ -1,4 +1,4 @@
-export const projectsData =  [
+const projectsData =  [
   {name: 'Kitchen',
     palettes: [
   {name: 'Seabreeze', color_one: '#bfe9d4', color_two:'#5f9ee5', color_three: '#f28e98', color_four:'#4740b7', color_five: '#7939da'},
@@ -18,3 +18,5 @@ palettes: [
 {name: 'Purple Power', color_one: '#bfe9d4', color_two:'#5f9ee5', color_three: '#f28e98', color_four:'#4740b7', color_five: '#7939da'}]
 }
 ]
+
+module.exports = projectsData;

@@ -1,4 +1,4 @@
-import {projectsData} from '../db/data.js'
+const projectsData = require('../../data') 
 
 const createProject = (knex, project) => {
   return knex('projects').insert({
