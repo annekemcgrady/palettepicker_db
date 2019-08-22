@@ -1,3 +1,7 @@
 language: node_js
 node_js: 
   - "node"
+services:
+  - postgresql
+before_script:
+  - psql -c 'CREATE DATABASE color_schemes_test;' -U postgres
