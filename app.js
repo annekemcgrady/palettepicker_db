@@ -8,7 +8,7 @@ const database = require('knex')(configuration)
 app.locals.title = 'Palette Picker';
 app.use(cors());
 
-app.get('/', (request, response) => {
+app.get('/', (req, response) => {
   response.send('Oh hey Palette Picker');
 });
 
@@ -26,7 +26,7 @@ app.get('/api/v1/projects', (req, res) => {
 
 app.get('/api/v1/projects/:id', (req, res) => {
   database('projects')
-  .where('id', req.params.id)
+  .where({id: req.params.id})
   .select()
   .then(project => {
     res.status(200).json(project)
@@ -56,6 +56,23 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
     }
   })
 
+  app.post('/api/v1/projects', (req, res) => {
+    const project = req.body
+    database('projects')
+    .insert(project, 'id')
+    .then(project => {
+      res.status(201).json({ id: project[0] })
+    })
+  })
+
+  app.post('/api/v1/palettes', (req, res) => {
+    const palette = req.body
+    database('palettes')
+    .insert(palette, 'id')
+    .then(palette => {
+      res.status(201).json({ id: palette[0] })
+    })
+  })
 
 
 
