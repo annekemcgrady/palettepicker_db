@@ -130,7 +130,16 @@ describe('API', () => {
         it('should return a 204 status code and remove project from database', async () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
             console.log(selectedId)
-            const response = await request(app).delete(`api/v1/projects/${selectedId}`)
+            const response = await request(app).delete(`/api/v1/projects/${selectedId}`)
+            expect(response.status).toBe(204)
+        })
+    })
+
+    describe('DELETE /palettes/:id', () => {
+        it('should return a 204 status code and remove palette from database', async () => {
+            const selectedId = await database('palettes').first('id').then(object => object.id)
+            console.log(selectedId)
+            const response = await request(app).delete(`/api/v1/palettes/${selectedId}`)
             expect(response.status).toBe(204)
         })
     })

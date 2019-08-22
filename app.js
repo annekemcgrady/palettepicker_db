@@ -111,10 +111,18 @@ app.delete('/api/v1/projects/:id', (req, res) => {
   Promise.all(deletePromises)
   .then((projects) => {
     res.status(204).json(`Project with id ${req.params.id} has been deleted.`)
-  })
-  .catch(error => {
-    res.status(500).json({ error });
-  })
+  }).catch(error => {
+    res.status(500).json({ error })
+  }) 
+})
+
+app.delete('/api/v1/palettes/:id', (req, res) => {
+ database('palettes').where('id', req.params.id).del()
+  .then((palette) => {
+    res.status(204).json(`Palette with id ${req.params.id} has been deleted.`)
+  }).catch(error => {
+    res.status(500).json({ error })
+  }) 
 })
 
   
