@@ -94,7 +94,11 @@ describe('API', () => {
             expect(addedProject.name).toEqual(mockProject.name)
         })
 
-        it('should return')
+        it('should return a 422 error if missing required parameter', async () => {
+            const mockProject = {title: 22}
+            const response = await request(app).post('/api/v1/projects').send(mockProject);
+            expect(response.status).toBe(422)
+        })
     });
 
     describe('POST /palettes', () => {
@@ -111,15 +115,21 @@ describe('API', () => {
             const response = await request(app).post('/api/v1/palettes').send(mockPalette);
             const palettes = await database('palettes').where({ id: response.body.id })
             const addedPalette = palettes[0]
-
             expect(response.status).toBe(201)
             expect(addedPalette.name).toEqual(mockPalette.name)
         })
+
+        it('should return a 422 error if missing required parameter', async () => {
+            const mockPalette = {title: 22}
+            const response = await request(app).post(`/api/v1/palettes`).send(mockPalette);
+            expect(response.status).toBe(422)
+        })
     })
 
-    describe('DELETE / projects/:id', () => {
-        it.skip('should return a 204 status code and remove project from database', async () => {
+    describe('DELETE /projects/:id', () => {
+        it('should return a 204 status code and remove project from database', async () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
+            console.log(selectedId)
             const response = await request(app).delete(`api/v1/projects/${selectedId}`)
             expect(response.status).toBe(204)
         })
