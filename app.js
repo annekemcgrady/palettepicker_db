@@ -16,20 +16,57 @@ app.get('/api/v1/projects', (req, res) => {
   database('projects')
   .select()
   .then(projects => {
+    if(!projects.length) {
+      res.status(404).json("No projects found")
+    } else {
     res.status(200).json(projects)
+    }
   })
 });
 
 app.get('/api/v1/projects/:id', (req, res) => {
   database('projects')
-  .where({id: request.params.id})
+  .where('id', req.params.id)
   .select()
   .then(project => {
     res.status(200).json(project)
   })
-})
+});
 
-module.exports = app
+app.get('/api/v1/palettes', (req, res) => {
+  database('palettes')
+  .select()
+  .then(palettes => {
+    if(!palettes.length) {
+      res.status(404).json('No palettes found')
+    } else {
+    res.status(200).json(palettes)
+    }
+  })
+});
+
+app.get('/api/v1/projects/:id/palettes', (req, res) => {
+  database('palettes').where('project_id', req.params.id)
+  .select()
+  .then(palettes => {
+    if(!palettes.length) {
+      res.status(404).json('No palettes found')
+    } else {
+    res.status(200).json(palettes)
+    }
+  })
+
+
+
+
+  
+});
+
+
+
+
+
+module.exports = app;
 
 //REQUIRED ENDPOINTS
 

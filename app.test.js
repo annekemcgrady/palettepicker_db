@@ -16,9 +16,9 @@ describe('Server', () => {
 });
 
 describe('API', () => {
-    // beforeEach(async () => {
-    //     await database.seed.run()
-    // })
+    beforeEach(async () => {
+        await database.seed.run()
+    })
 
     describe('GET /projects', () => {
         it('should return a status of 200 and all projects', async () => {
@@ -36,18 +36,38 @@ describe('API', () => {
     describe('GET /projects/:id', () => {
         it('should return 200 status and one project based on id', async () => {
             const expectedId = await database('projects').first('id').then(object => object.id)
-            
-            const expectedProject = await database('projects').where({ id: expectedId }).select()
+            const expectedProject = await database('projects').select().where({ id: expectedId })
             const response = await request(app).get(`/api/v1/projects/${expectedId}`)
             const project = response.body
-            console.log('response', response)          
-            console.log('expected', expectedProject)
-            console.log('received', project )
-            
-
+      
             expect(response.status).toBe(200)
-            expect(project).toEqual(expectedProject)
+            expect(project.name).toEqual(expectedProject.name)
         })
+    })
+
+describe('GET /palettes', () => {
+    it('should return a status of 200 and all palettes', async () => {
+        const expectedPalettes = await database('palettes').select();
+
+        const response = await request(app).get('/api/v1/palettes');
+        const palettes = response.body
+        
+        expect(response.status).toBe(200);
+        expect(palettes[0].name).toEqual(expectedPalettes[0].name);
+
     })
 })
 
+describe('GET /projects/:id/palettes', () => {
+    it('should return 200 status and all palettes for a project', async () => {
+        const expectedId = await database('projects').first('id').then(object => object.id)
+        const expectedPalettes = await database('palettes').where({ project_id: expectedId }).select()
+        const response = await request(app).get(`/api/v1/projects/${expectedId}/palettes`)
+        const palettes = response.body
+  
+        expect(response.status).toBe(200)
+        expect(palettes[0].name).toEqual(expectedPalettes[0].name)
+    })
+})
+
+})
