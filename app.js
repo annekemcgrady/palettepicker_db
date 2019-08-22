@@ -6,6 +6,7 @@ const configuration = require('./knexfile')[environment]
 const database = require('knex')(configuration)
 
 app.locals.title = 'Palette Picker';
+app.use(express.json())
 app.use(cors());
 
 app.get('/', (req, response) => {
