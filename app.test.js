@@ -71,7 +71,7 @@ describe('API', () => {
     })
 
     describe('POST /projects', () => {
-        it('should return 201 status and add new project to the databse', async () => {
+        it.skip('should return 201 status and add new project to the databse', async () => {
             const mockProject = {
                 name: 'Living Room'
             }
@@ -86,7 +86,7 @@ describe('API', () => {
     });
 
     describe('POST /palettes', () => {
-        it('should return 201 status and add new palette to the database', async () => {
+        it.skip('should return 201 status and add new palette to the database', async () => {
             const mockPalette = {
                 name: 'London Fog',
                 color_one: '#bfe9d4', 
