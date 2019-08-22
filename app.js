@@ -123,8 +123,27 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       });
   });
 
+  app.patch("/api/v1/projects/:id", (req, res) => {
+    if(!req.body.name) {
+      res.status(422).json('A name is required')
+    } else {
+    database("projects")
+      .where("id", req.params.id)
+      .update(req.body)
+      .then(project => {
+        res.status(201).json({id: project});
+      })
+      .catch(error => {
+        res.status(500).json({ error });
+      });
+    }
+  });
+
   app.patch("/api/v1/palettes/:id", (req, res) => {
-    console.log(req.body)
+    if(!req.body) {
+      res.status(422).json('A body is required')
+    }
+
     database("palettes")
       .where("id", req.params.id)
       .update(req.body)
@@ -146,7 +165,7 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
         .del()
     ];
     Promise.all(deletePromises)
-      .then(projects => {
+      .then(project => {
         res
           .status(204)
           .json(`Project with id ${req.params.id} has been deleted.`);
@@ -161,9 +180,13 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       .where("id", req.params.id)
       .del()
       .then(palette => {
+        if(!palette){
+          res.status(404).json('No palette with that id found')
+        } else {
         res
           .status(204)
           .json(`Palette with id ${req.params.id} has been deleted.`);
+        }
       })
       .catch(error => {
         res.status(500).json({ error });

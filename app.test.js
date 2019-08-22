@@ -126,6 +126,26 @@ describe('API', () => {
         })
     })
 
+    describe('PATCH /projects/:id', () => {
+        it('should return 201 status and update project in the database', async () => {
+            const mockProject = {
+                name: 'She Shed', 
+            }
+            const selectedId = await database('projects').first('id').then(object => object.id)
+            const response = await request(app).patch(`/api/v1/projects/${selectedId}`).send(mockProject);
+            const updatedProject = await database('projects').where({ id: selectedId })
+            expect(response.status).toBe(201)
+            expect(updatedProject[0].name).toEqual(mockProject.name)
+        })
+
+        it('should return a 422 error if no request has no body', async () => {
+            const mockProject = {}
+            const selectedId = await database('projects').first('id').then(object => object.id)
+            const response = await request(app).patch(`/api/v1/projects/${selectedId}`).send(mockProject);
+            expect(response.status).toBe(422)
+        })
+    })
+
     describe('PATCH /palettes/:id', () => {
         it('should return 201 status and update palette in the database', async () => {
             const mockPalette = {
@@ -144,6 +164,11 @@ describe('API', () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
             const response = await request(app).delete(`/api/v1/projects/${selectedId}`)
             expect(response.status).toBe(204)
+        })
+
+        it.skip('should return a 404 if a request id is bad', async () => {
+            const response = await request(app).delete('/api/v1/projects/-2')
+            expect(response.status).toBe(404)
         })
     })
 
