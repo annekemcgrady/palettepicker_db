@@ -39,7 +39,7 @@ describe('API', () => {
             const expectedProject = await database('projects').select().where({ id: expectedId })
             const response = await request(app).get(`/api/v1/projects/${expectedId}`)
             const project = response.body
-      
+
             expect(response.status).toBe(200)
             expect(project.name).toEqual(expectedProject.name)
         })
@@ -126,10 +126,22 @@ describe('API', () => {
         })
     })
 
+    describe('PATCH /palettes/:id', () => {
+        it('should return 201 status and update palette in the database', async () => {
+            const mockPalette = {
+                color_one: '#NEW0NE', 
+            }
+            const selectedId = await database('palettes').first('id').then(object => object.id)
+            const response = await request(app).patch(`/api/v1/palettes/${selectedId}`).send(mockPalette);
+            const newPalette = await database('palettes').where({ id: selectedId })
+            expect(response.status).toBe(201)
+            expect(newPalette[0].color_one).toEqual(mockPalette.color_one)
+        })
+    })
+
     describe('DELETE /projects/:id', () => {
         it('should return a 204 status code and remove project from database', async () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
-            console.log(selectedId)
             const response = await request(app).delete(`/api/v1/projects/${selectedId}`)
             expect(response.status).toBe(204)
         })
@@ -138,7 +150,6 @@ describe('API', () => {
     describe('DELETE /palettes/:id', () => {
         it('should return a 204 status code and remove palette from database', async () => {
             const selectedId = await database('palettes').first('id').then(object => object.id)
-            console.log(selectedId)
             const response = await request(app).delete(`/api/v1/palettes/${selectedId}`)
             expect(response.status).toBe(204)
         })
