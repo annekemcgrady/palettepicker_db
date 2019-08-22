@@ -16,9 +16,9 @@ describe('Server', () => {
 });
 
 describe('API', () => {
-    // beforeEach(async () => {
-    //     await database.seed.run()
-    // })
+    beforeEach(async () => {
+        await database.seed.run()
+    })
 
     describe('GET /projects', () => {
         it('should return a status of 200 and all projects', async () => {

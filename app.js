@@ -8,7 +8,7 @@ const database = require('knex')(configuration)
 app.locals.title = 'Palette Picker';
 app.use(cors());
 
-app.get('/', (request, response) => {
+app.get('/', (req, response) => {
   response.send('Oh hey Palette Picker');
 });
 
@@ -22,7 +22,7 @@ app.get('/api/v1/projects', (req, res) => {
 
 app.get('/api/v1/projects/:id', (req, res) => {
   database('projects')
-  .where({id: request.params.id})
+  .where({id: req.params.id})
   .select()
   .then(project => {
     res.status(200).json(project)
