@@ -22,6 +22,8 @@ app.get('/api/v1/projects', (req, res) => {
     } else {
     res.status(200).json(projects)
     }
+  }).catch(error => {
+    res.status(500).json({ error })
   })
 });
 
@@ -30,7 +32,13 @@ app.get('/api/v1/projects/:id', (req, res) => {
   .where({id: req.params.id})
   .select()
   .then(project => {
+    if(!project.length) {
+    res.status(404).json("No project with this id found")
+    } else {
     res.status(200).json(project)
+    }
+  }).catch(error => {
+    res.status(500).json({ error })
   })
 });
 
@@ -43,6 +51,8 @@ app.get('/api/v1/palettes', (req, res) => {
     } else {
     res.status(200).json(palettes)
     }
+  }).catch(error => {
+    res.status(500).json({ error })
   })
 });
 
@@ -55,10 +65,20 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
     } else {
     res.status(200).json(palettes)
     }
+  }).catch(error => {
+    res.status(500).json({ error })
   })
 
   app.post('/api/v1/projects', (req, res) => {
     const project = req.body
+    for (let requiredParameter of ['name']) {
+    if (!project[requiredParameter]) {
+      return res
+        .status(422)
+        .send({ error: `Expected format: { name: <String> } You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
     database('projects')
     .insert(project, 'id')
     .then(project => {
@@ -68,6 +88,7 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
 
   app.post('/api/v1/palettes', (req, res) => {
     const palette = req.body
+
     database('palettes')
     .insert(palette, 'id')
     .then(palette => {
@@ -75,7 +96,16 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
     })
   })
 
-
+app.delete('/api/v1/projects/:id', (req, res) => {
+  const deletePromises = [database('palettes').where('project_id', req.params.id).del(), database('projects').where('id', req.params.id).del()]
+  Promise.all(deletePromises)
+  .then((projects) => {
+    res.status(204).json(`Project with id ${req.params.id} has been deleted.`)
+  })
+  .catch(error => {
+    res.status(500).json({ error });
+  })
+})
 
   
 });

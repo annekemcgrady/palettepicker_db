@@ -43,6 +43,11 @@ describe('API', () => {
             expect(response.status).toBe(200)
             expect(project.name).toEqual(expectedProject.name)
         })
+
+        it('should return 404 status if passed a bad id param', async () => {
+            const response = await request(app).get('/api/v1/projects/2')
+            expect(response.status).toBe(404)
+        })
     })
 
     describe('GET /palettes', () => {
@@ -54,8 +59,8 @@ describe('API', () => {
             
             expect(response.status).toBe(200);
             expect(palettes[0].name).toEqual(expectedPalettes[0].name);
-
         })
+    
     })
 
     describe('GET /projects/:id/palettes', () => {
@@ -68,10 +73,15 @@ describe('API', () => {
             expect(response.status).toBe(200)
             expect(palettes[0].name).toEqual(expectedPalettes[0].name)
         })
+
+        it('should return 404 status if passed a bad id param', async () => {
+            const response = await request(app).get('/api/v1/projects/2/palettes')
+            expect(response.status).toBe(404)
+        })
     })
 
     describe('POST /projects', () => {
-        it.skip('should return 201 status and add new project to the databse', async () => {
+        it('should return 201 status and add new project to the databse', async () => {
             const mockProject = {
                 name: 'Living Room'
             }
@@ -83,10 +93,12 @@ describe('API', () => {
             expect(response.status).toBe(201)
             expect(addedProject.name).toEqual(mockProject.name)
         })
+
+        it('should return')
     });
 
     describe('POST /palettes', () => {
-        it.skip('should return 201 status and add new palette to the database', async () => {
+        it('should return 201 status and add new palette to the database', async () => {
             const mockPalette = {
                 name: 'London Fog',
                 color_one: '#bfe9d4', 
@@ -102,6 +114,14 @@ describe('API', () => {
 
             expect(response.status).toBe(201)
             expect(addedPalette.name).toEqual(mockPalette.name)
+        })
+    })
+
+    describe('DELETE / projects/:id', () => {
+        it.skip('should return a 204 status code and remove project from database', async () => {
+            const selectedId = await database('projects').first('id').then(object => object.id)
+            const response = await request(app).delete(`api/v1/projects/${selectedId}`)
+            expect(response.status).toBe(204)
         })
     })
 
