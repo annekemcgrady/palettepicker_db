@@ -1,9 +1,16 @@
 language: node_js
-node_js: 
-  - "node"
+node_js:
+- node
 services:
-  - postgresql
+- postgresql
 before_script:
-  - psql -c 'CREATE DATABASE color_schemes_test;' -U postgres
-  - knex migrate:latest --env=test
-  - knex seed:run --env=test
+- psql -c 'CREATE DATABASE color_schemes_test;' -U postgres
+- knex migrate:latest --env=test
+- knex seed:run --env=test
+notifications:
+  email: false
+deploy:
+  api_key:
+    secure: d/gXYjIAtiKhGMJCZpLdLzEOYiMHxzm0D34jf+dWB6S0/5rJ3KWDKYVJvv8uE3uF/w42lLBjDgje5D6+6b49Jz/XGHuxU062uChAjhjveGqUqloo1LbL+nIsU2k/CYwHvCCkfJ1KiqaAHtbBjUgGdgXMWJbvTR6YKittAuK0VD2n4QcWHsFp07UNTbHPDOarlFR3L4qa4GYaq14LYZd4dDot4L3aI/De9TphAcZ0L3jStpNegqWQL6/c4dX6+um0UYWEdoyvbRM88T6wHsn7HpRTKR+/nUmEQsw3lPIk216WEvtQOD362mxI85XtU4H6Pa+v9q0zAqxL69sEL7xhQLPN7yZTwxzJ3yzuxlRoiNYEE6kW4p0Zm8SGDf1xjyoDBmq+s5tf/8CAosV3GZ50GUXkG6H8qLFo/6JXCRu8B7hqyf4l6tiT+4iCwhpZtbv+xO3tY/ggd1T0YcVWjstreJcajv2mlrsKWzlf/b4wj+fY7kZDwRK9DfZAGY71D+PftzcBFtS0QrVqO25Cdsfitv3C+VHtnhsdCF+WdaoGuIkP07EL2O8/F7A1tA09zViokq69XbufFpd2PYwWBZq3xPhG45q2ixunw5Rc7JNIYj3AocFHrLnsV3WEm0W7bV4talSIwNgPVX0WkLUP+AXpUJxHK+JV2JlXlGMa2mUfRtU=
+  app: palettepicker_db
+  skip_cleanup: true
