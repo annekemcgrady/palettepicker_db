@@ -167,7 +167,8 @@ describe('API', () => {
         })
 
         it.skip('should return a 404 if a request id is bad', async () => {
-            const response = await request(app).delete('/api/v1/projects/-2')
+            const response = await request(app).delete('/api/v1/projects/2')
+            // const projectRemaining = await database('projects').where({id : 2}).select()
             expect(response.status).toBe(404)
         })
     })
