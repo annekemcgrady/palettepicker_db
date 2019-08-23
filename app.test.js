@@ -178,6 +178,11 @@ describe('API', () => {
             const response = await request(app).delete(`/api/v1/palettes/${selectedId}`)
             expect(response.status).toBe(204)
         })
+
+        it('should return a 404 if a request id is bad', async () => {
+            const response = await request(app).delete('/api/v1/palettes/-2')
+            expect(response.status).toBe(404)
+        })
     })
 
 })

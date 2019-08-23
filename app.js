@@ -72,7 +72,8 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
     })
     .catch(error => {
       res.status(500).json({ error });
-    });
+    })
+  });
 
   app.post("/api/v1/projects", (req, res) => {
     const project = req.body;
@@ -156,6 +157,7 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
   });
 
   app.delete("/api/v1/projects/:id", (req, res) => {
+    //need a 404 sad path and or migration change so we don't need promise.all
     const deletePromises = [
       database("palettes")
         .where("project_id", req.params.id)
@@ -192,6 +194,12 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
         res.status(500).json({ error });
       });
   });
-});
+
+
+
+
+
+
+
 
 module.exports = app;
