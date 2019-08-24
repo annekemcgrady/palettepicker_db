@@ -16,9 +16,9 @@ describe('Server', () => {
 });
 
 describe('API', () => {
-    beforeEach(async () => {
-        await database.seed.run()
-    })
+    // beforeEach(async () => {
+    //     await database.seed.run()
+    // })
 
     describe('GET /projects', () => {
         it('should return a status of 200 and all projects', async () => {
@@ -188,9 +188,10 @@ describe('API', () => {
     })
 
     describe('GET /projects/search', () => {
-        it('should return a 200 status code and the project by name', async () => {
-            const selectedName = await database('projects').first('name').then(object => object.name)
-            const response = await request(app).get(`/api/v1/projects/search?name=${selectedName}`)
+        it.only('should return a 200 status code and the project by name', async () => {
+            const expectedProject = await database('projects').select().where({ name: 'Kitchen'})
+            const response = await request(app).get('/api/v1/projects/search?name=Kitchen')
+            console.log(response.body)
         })
     })
 

@@ -44,6 +44,25 @@ app.get("/api/v1/projects/:id", (req, res) => {
     });
 });
 
+//CUSTOM QUERY ENDPOINT TO SEARCH PROJECTS BY NAME
+app.get("/api/v1/search", (req, res) => {
+  const query = req.query.name;
+
+  database("projects")
+    .where("name", query)
+    .select()
+    .then(project => {
+      if (!project) {
+        res.status(404).json("No project found");
+      } else {
+        res.status(200).json(project);
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+});
+
 app.get("/api/v1/palettes", (req, res) => {
   database("palettes")
     .select()
@@ -73,127 +92,121 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
     .catch(error => {
       res.status(500).json({ error });
     })
-  });
+});
 
-  app.post("/api/v1/projects", (req, res) => {
-    const project = req.body;
-    for (let requiredParameter of ["name"]) {
-      if (!project[requiredParameter]) {
-        return res
-          .status(422)
-          .send({
-            error: `Expected format: { name: <String> } You're missing a "${requiredParameter}" property.`
-          });
-      }
-    }
-
-    database("projects")
-      .insert(project, "id")
-      .then(project => {
-        res.status(201).json({ id: project[0] });
+app.post("/api/v1/projects", (req, res) => {
+  const project = req.body;
+  for (let requiredParameter of ["name"]) {
+    if (!project[requiredParameter]) {
+      return res.status(422).send({
+        error: `Expected format: { name: <String> } You're missing a "${requiredParameter}" property.`
       });
-  });
-
-  app.post("/api/v1/palettes", (req, res) => {
-    const palette = req.body;
-
-    for (let requiredParameter of [
-      "name",
-      "color_one",
-      "color_two",
-      "color_three",
-      "color_four",
-      "color_five",
-      "project_id"
-    ]) {
-      if (!palette[requiredParameter]) {
-        return res
-          .status(422)
-          .send({
-            error: `Expected format: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String>, project_id: <Integer>} You're missing a "${requiredParameter}" property.`
-          });
-      }
     }
+  }
 
-    database("palettes")
-      .insert(palette, "id")
-      .then(palette => {
-        res.status(201).json({ id: palette[0] });
-      })
-      .catch(error => {
-        res.status(500).json({ error });
+  database("projects")
+    .insert(project, "id")
+    .then(project => {
+      res.status(201).json({ id: project[0] });
+    })
+});
+
+app.post("/api/v1/palettes", (req, res) => {
+  const palette = req.body;
+
+  for (let requiredParameter of [
+    "name",
+    "color_one",
+    "color_two",
+    "color_three",
+    "color_four",
+    "color_five",
+    "project_id"
+  ]) {
+    if (!palette[requiredParameter]) {
+      return res.status(422).send({
+        error: `Expected format: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String>, project_id: <Integer>} You're missing a "${requiredParameter}" property.`
       });
-  });
+    }
+  }
 
-  app.patch("/api/v1/projects/:id", (req, res) => {
-    if(!req.body.name) {
-      res.status(422).json('A name is required')
-    } else {
+  database("palettes")
+    .insert(palette, "id")
+    .then(palette => {
+      res.status(201).json({ id: palette[0] });
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+});
+
+app.patch("/api/v1/projects/:id", (req, res) => {
+  if (!req.body.name) {
+    res.status(422).json("A name is required");
+  } else {
     database("projects")
       .where("id", req.params.id)
       .update(req.body)
       .then(project => {
-        res.status(201).json({id: project});
+        res.status(201).json({ id: project });
       })
       .catch(error => {
         res.status(500).json({ error });
       });
-    }
-  });
+  }
+});
 
-  //not sending correct msg when no req body
-  app.patch("/api/v1/palettes/:id", (req, res) => {
-    if(!req.body) {
-      res.status(422).json('A request body is required')
-    }
+//not sending correct msg when no req body
+app.patch("/api/v1/palettes/:id", (req, res) => {
+  if (!req.body) {
+    res.status(422).json("A request body is required");
+  }
 
-    database("palettes")
-      .where("id", req.params.id)
-      .update(req.body)
-      .then(palette => {
-        res.status(201).json({id: palette});
-      })
-      .catch(error => {
-        res.status(500).json({ error });
-      });
-  });
+  database("palettes")
+    .where("id", req.params.id)
+    .update(req.body)
+    .then(palette => {
+      res.status(201).json({ id: palette });
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+});
 
-  app.delete("/api/v1/projects/:id", (req, res) => {
-    database("projects")
-        .where("id", req.params.id)
-        .del()
-      .then(project => {
-        if(!project) {
-          res.status(404).json('No project witht this id found')
-        } else {
+app.delete("/api/v1/projects/:id", (req, res) => {
+  database("projects")
+    .where("id", req.params.id)
+    .del()
+    .then(project => {
+      if (!project) {
+        res.status(404).json("No project witht this id found");
+      } else {
         res
           .status(204)
           .json(`Project with id ${req.params.id} has been deleted.`);
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ error });
-      });
-  });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+});
 
-  app.delete("/api/v1/palettes/:id", (req, res) => {
-    database("palettes")
-      .where("id", req.params.id).del().then(palette => {
-        if(!palette) {
-          res.status(404).json('No palette with that id found')
-        } else {
-        res.status(204).json(`Palette with id ${req.params.id} has been deleted.`);
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ error });
-      });
-  });
+app.delete("/api/v1/palettes/:id", (req, res) => {
+  database("palettes")
+    .where("id", req.params.id)
+    .del()
+    .then(palette => {
+      if (!palette) {
+        res.status(404).json("No palette with that id found");
+      } else {
+        res
+          .status(204)
+          .json(`Palette with id ${req.params.id} has been deleted.`);
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
+});
 
-  app.get("/api/v1/projects/search", (req, res) => {
-    let query = req.query.name
-
-  })
-
-  
 module.exports = app;
