@@ -94,6 +94,8 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       });
   });
 
+
+  //not adding a project id 
   app.post("/api/v1/palettes", (req, res) => {
     const palette = req.body;
 
@@ -103,13 +105,14 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       "color_two",
       "color_three",
       "color_four",
-      "color_five"
+      "color_five",
+      "project_id"
     ]) {
       if (!palette[requiredParameter]) {
         return res
           .status(422)
           .send({
-            error: `Expected format: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> } You're missing a "${requiredParameter}" property.`
+            error: `Expected format: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String>, project_id: <Integer>} You're missing a "${requiredParameter}" property.`
           });
       }
     }
@@ -140,9 +143,10 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
     }
   });
 
+  //not sending correct msg when no req body
   app.patch("/api/v1/palettes/:id", (req, res) => {
     if(!req.body) {
-      res.status(422).json('A body is required')
+      res.status(422).json('A request body is required')
     }
 
     database("palettes")
@@ -157,20 +161,17 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
   });
 
   app.delete("/api/v1/projects/:id", (req, res) => {
-    //need a 404 sad path and or migration change so we don't need promise.all
-    const deletePromises = [
-      database("palettes")
-        .where("project_id", req.params.id)
-        .del(),
-      database("projects")
+    database("projects")
         .where("id", req.params.id)
         .del()
-    ];
-    Promise.all(deletePromises)
       .then(project => {
+        if(!project) {
+          res.status(404).json('No project witht this id found')
+        } else {
         res
           .status(204)
           .json(`Project with id ${req.params.id} has been deleted.`);
+        }
       })
       .catch(error => {
         res.status(500).json({ error });
@@ -179,15 +180,11 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
 
   app.delete("/api/v1/palettes/:id", (req, res) => {
     database("palettes")
-      .where("id", req.params.id)
-      .del()
-      .then(palette => {
-        if(!palette){
+      .where("id", req.params.id).del().then(palette => {
+        if(!palette) {
           res.status(404).json('No palette with that id found')
         } else {
-        res
-          .status(204)
-          .json(`Palette with id ${req.params.id} has been deleted.`);
+        res.status(204).json(`Palette with id ${req.params.id} has been deleted.`);
         }
       })
       .catch(error => {
@@ -195,11 +192,10 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       });
   });
 
+  app.get("/api/v1/projects/search", (req, res) => {
+    let query = req.query.name
 
+  })
 
-
-
-
-
-
+  
 module.exports = app;
