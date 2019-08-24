@@ -94,8 +94,6 @@ app.get("/api/v1/projects/:id/palettes", (req, res) => {
       });
   });
 
-
-  //not adding a project id 
   app.post("/api/v1/palettes", (req, res) => {
     const palette = req.body;
 

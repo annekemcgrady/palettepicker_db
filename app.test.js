@@ -100,7 +100,7 @@ describe('API', () => {
         })
     });
 
-    //need to change test once poject id added in endpoint
+    //updated endpoint to require project_id, test may need to be revised
     describe('POST /palettes', () => {
         it.skip('should return 201 status and add new palette to the database', async () => {
             const mockPalette = {
@@ -109,7 +109,8 @@ describe('API', () => {
                 color_two:'#5f9ee5', 
                 color_three: '#f28e98', 
                 color_four:'#4740b7', 
-                color_five: '#7939da'
+                color_five: '#7939da',
+                project_id: 5
             }
 
             const response = await request(app).post('/api/v1/palettes').send(mockPalette);
