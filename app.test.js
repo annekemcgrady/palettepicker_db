@@ -16,9 +16,9 @@ describe('Server', () => {
 });
 
 describe('API', () => {
-    // beforeEach(async () => {
-    //     await database.seed.run()
-    // })
+    beforeEach(async () => {
+        await database.seed.run()
+    })
 
     describe('GET /projects', () => {
         it('should return a status of 200 and all projects', async () => {
@@ -46,6 +46,16 @@ describe('API', () => {
         it('should return 404 status if passed a bad id param', async () => {
             const response = await request(app).get('/api/v1/projects/2')
             expect(response.status).toBe(404)
+        })
+    })
+
+    //CUSTOM QUERY ENDPONT TEST
+    describe('GET /search', () => {
+        it('should return a 200 status code and the project by name', async () => {
+            const mockName = await database('projects').first('name').then(object => object.name)
+            const response = await request(app).get(`/api/v1/search?name=${mockName}`)
+            expect(response.status).toBe(200)
+            expect(response.body[0].name).toEqual(mockName)
         })
     })
 
@@ -164,6 +174,7 @@ describe('API', () => {
     describe('DELETE /projects/:id', () => {
         it('should return a 204 status code and remove project from database', async () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
+            console.log(selectedId)
             const response = await request(app).delete(`/api/v1/projects/${selectedId}`)
             expect(response.status).toBe(204)
         })
@@ -184,14 +195,6 @@ describe('API', () => {
         it('should return a 404 if a request id is bad', async () => {
             const response = await request(app).delete('/api/v1/palettes/-2')
             expect(response.status).toBe(404)
-        })
-    })
-
-    describe('GET /projects/search', () => {
-        it.only('should return a 200 status code and the project by name', async () => {
-            const expectedProject = await database('projects').select().where({ name: 'Kitchen'})
-            const response = await request(app).get('/api/v1/projects/search?name=Kitchen')
-            console.log(response.body)
         })
     })
 
