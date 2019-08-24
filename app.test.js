@@ -100,9 +100,10 @@ describe('API', () => {
         })
     });
 
-    //updated endpoint to require project_id, test may need to be revised
     describe('POST /palettes', () => {
-        it.skip('should return 201 status and add new palette to the database', async () => {
+        it('should return 201 status and add new palette to the database', async () => {
+            const mockId = await database('projects').first('id').then(object => object.id)
+            
             const mockPalette = {
                 name: 'London Fog',
                 color_one: '#bfe9d4', 
@@ -110,7 +111,7 @@ describe('API', () => {
                 color_three: '#f28e98', 
                 color_four:'#4740b7', 
                 color_five: '#7939da',
-                project_id: 5
+                project_id: mockId
             }
 
             const response = await request(app).post('/api/v1/palettes').send(mockPalette);
