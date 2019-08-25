@@ -39,7 +39,6 @@ describe('API', () => {
             const expectedProject = await database('projects').select().where({ id: expectedId })
             const response = await request(app).get(`/api/v1/projects/${expectedId}`)
             const project = response.body
-
             expect(response.status).toBe(200)
             expect(project.name).toEqual(expectedProject.name)
         })
@@ -47,6 +46,16 @@ describe('API', () => {
         it('should return 404 status if passed a bad id param', async () => {
             const response = await request(app).get('/api/v1/projects/2')
             expect(response.status).toBe(404)
+        })
+    })
+
+    //CUSTOM QUERY ENDPONT TEST
+    describe('GET /search', () => {
+        it('should return a 200 status code and the project by name', async () => {
+            const mockName = await database('projects').first('name').then(object => object.name)
+            const response = await request(app).get(`/api/v1/search?name=${mockName}`)
+            expect(response.status).toBe(200)
+            expect(response.body[0].name).toEqual(mockName)
         })
     })
 
@@ -103,13 +112,16 @@ describe('API', () => {
 
     describe('POST /palettes', () => {
         it('should return 201 status and add new palette to the database', async () => {
+            const mockId = await database('projects').first('id').then(object => object.id)
+            
             const mockPalette = {
                 name: 'London Fog',
                 color_one: '#bfe9d4', 
                 color_two:'#5f9ee5', 
                 color_three: '#f28e98', 
                 color_four:'#4740b7', 
-                color_five: '#7939da'
+                color_five: '#7939da',
+                project_id: mockId
             }
 
             const response = await request(app).post('/api/v1/palettes').send(mockPalette);
@@ -162,13 +174,13 @@ describe('API', () => {
     describe('DELETE /projects/:id', () => {
         it('should return a 204 status code and remove project from database', async () => {
             const selectedId = await database('projects').first('id').then(object => object.id)
+            console.log(selectedId)
             const response = await request(app).delete(`/api/v1/projects/${selectedId}`)
             expect(response.status).toBe(204)
         })
 
-        it.skip('should return a 404 if a request id is bad', async () => {
-            const response = await request(app).delete('/api/v1/projects/2')
-            // const projectRemaining = await database('projects').where({id : 2}).select()
+        it('should return a 404 if a request id is bad', async () => {
+            const response = await request(app).delete('/api/v1/projects/-2')
             expect(response.status).toBe(404)
         })
     })
