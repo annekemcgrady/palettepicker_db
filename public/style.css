@@ -1,0 +1,17 @@
+.requirement-tag {
+    color: red;
+}
+
+.sample-options {
+    background-color: #EEE8AA;
+    display: flex;
+    flex-direction: column
+}
+
+section {
+    display: flex;
+}
+
+h3 {
+    font-size: 30px;
+}
