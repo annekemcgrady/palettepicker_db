@@ -12,14 +12,82 @@
         <p>This RESTful API is built with NodeJs, Express, Knex and PostgreSQL. The data provided consists of palettes of hex codes for varying projects.</p>
         <p>Endpoints:</p>
         <section>
-            <p>Fetch projects</p>
-            <div><p></p></div>
+            <h3>GET all projects</h3>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects</p>
+            <h3>GET all palettes</h3>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/palettes</p>
+            <h3>Get palettes for specific project</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects/<span class='requirement-tag'>ID</span>/palettes</p>
+            <h3>GET one project</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects/<span class='requirement-tag'>ID</span></p>
+            <h3>GET one palette</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/palettes/<span class='requirement-tag'>ID</span></p>
         </section>
         <section>
-
+            <h3>Search projects and palettes</h3>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/search</p>
         </section>
         <section>
+            <h3>POST a new project</h3>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects</p>    
+            <div class='sample-options'>
+                <p>Body Format</p>
+                {
+                    name: <String>
+                }
+            </div>   
+            <h3>POST a new palette</h3>     
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects</p>    
+            <div class='sample-options'>
+                    <p>Body Format</p>
+                    {
+                        name: <String>,
+                        color_one: <String>,
+                        color_two: <String>,
+                        color_three: <String>,
+                        color_four: <String>,
+                        color_five: <String>,
+                    }
+                </div>   
+        </section>
+        <section>
+            <h3>PATCH a project</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects/<span class='requirement-tag'>ID</span></p>  
+            <div class='sample-options'>
+                    <p>Body Format</p>
+                    {
+                        name: <String>
+                    }
 
+            </div> 
+            <h3>PATCH a palette</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/palettes/<span class='requirement-tag'>ID</span></p> 
+            <div class='sample-options'>
+                    <p>Body Format</p>
+                    {
+                        name: <String>,
+                        color_one: <String>,
+                        color_two: <String>,
+                        color_three: <String>,
+                        color_four: <String>,
+                        color_five: <String>,
+                    }
+
+                    (use only params being patched)
+                </div> 
+        </section>
+        <section>
+            <h3>DELETE a project</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/projects/<span class='requirement-tag'>ID</span></p>  
+            <h3>DELETE a palette</h3>
+            <p>Required: <span class='requirement-tag'>ID</span></p>
+            <p>https://palettepicker-be.herokuapp.com/api/v1/palettes/<span class='requirement-tag'>ID</span></p>
         </section>
     </body>
 </html>
